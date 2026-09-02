@@ -1,0 +1,18 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.code-workspace
+
+# logs & temp
+*.log
+npm-debug.log*
+*.tmp
+
+# local env (none expected, keep safe)
+.env
+.env.*
+*.local
