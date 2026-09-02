@@ -8,7 +8,7 @@ const PD_SKILLS = [
   {
     name: "Cloud & Infra",
     cat: "infra",
-    skills: ["Microsoft Azure", "Microsoft 365", "Active Directory / Entra ID", "Google Cloud Platform", "VMware vSphere", "ESXi", "Hyper-V", "Windows Server", "Linux", "Red Hat Linux", "Networking", "Cisco Systems", "Server Administration"]
+    skills: ["Microsoft Azure", "Microsoft 365", "Microsoft Intune", "Active Directory / Entra ID", "Endpoint Management", "Google Cloud Platform", "VMware vSphere", "ESXi", "Hyper-V", "Windows Server", "Linux", "Red Hat Linux", "Networking", "Cisco Systems", "Server Administration"]
   },
   {
     name: "Automation & Code",
@@ -47,6 +47,12 @@ const PD_CERTS = [
 
 const PD_PROJECTS = [
   {
+    title: "Project Intrepid",
+    desc: "Enterprise Microsoft 365, Intune and Azure engineering under NeoVizta — identity, endpoint and cloud delivered at scale.",
+    meta: ["M365", "Intune", "Azure"],
+    tag: "Enterprise"
+  },
+  {
     title: "Stretchline",
     desc: "Cloud & Active Directory support for an enterprise client — identity, access and infrastructure administration.",
     meta: ["Azure", "AD", "M365"],
@@ -77,11 +83,11 @@ const PD_TERMINAL = [
   { type: "cmd", text: "whoami" },
   { type: "out", text: "Pubudu Dissanayaka — System Engineer / DevTenent Founder" },
   { type: "cmd", text: "cat primary_identities.txt" },
-  { type: "out", text: "Enterprise Infrastructure  ·  Cloud (Azure/M365)" },
+  { type: "out", text: "Enterprise Cloud & Endpoint  ·  Azure · M365 · Intune" },
   { type: "out", text: "Digital Studio (Web / SEO / SaaS)  ·  DevTenent" },
   { type: "cmd", text: "./deploy --stack" },
   { type: "out", text: "[✓] Infrastructure   [✓] Automation   [✓] Digital craft" },
   { type: "cmd", text: "uptime --viewer" },
-  { type: "out", text: "6+ years online — banking-grade SLA. Sri Lanka (UTC+5:30)." },
+  { type: "out", text: "6+ years online — NeoVizta / banking-grade. Sri Lanka (UTC+5:30)." },
   { type: "out", text: "STATUS: OPEN TO OPPORTUNITIES" }
 ];
