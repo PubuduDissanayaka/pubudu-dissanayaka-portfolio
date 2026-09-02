@@ -1,0 +1,58 @@
+# ============================================================
+#  Pubudu Dissanayaka portfolio — security hardening
+#  Served via Cloudflare (proxy) -> StackCP origin (Apache)
+#  These rules run at origin; Cloudflare adds its own edge layer.
+# ============================================================
+
+# --- No directory listings ---
+Options -Indexes
+
+# --- Hide the server/Apache/PHP version in signatures ---
+ServerSignature Off
+
+# --- Block sensitive / backup / source-control files at origin ---
+# (Cloudflare already 403s some of these at the edge; this is defense in depth
+#  so the ORIGIN also refuses even if the Cloudflare rule changes.)
+<FilesMatch "(^\.|README\.md|\.md$|\.bak$|\.log$|\.sqlite$|\.sql$|\.env$|\.ini$|\.sh$)">
+  Require all denied
+</FilesMatch>
+RedirectMatch 404 /\.git
+RedirectMatch 404 /\.svn
+RedirectMatch 404 /\.hg
+RedirectMatch 404 /\.gitignore
+RedirectMatch 404 /README\.md
+RedirectMatch 404 /(composer\.(json|lock)|package\.json|package-lock\.json|yarn\.lock|node_modules|vendor)/
+
+# --- Security response headers ---
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; upgrade-insecure-requests"
+  Header always set X-Powered-By "Pubudu.devtenent.com (static site)"
+</IfModule>
+
+# --- Static asset cache ---
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|png|jpg|jpeg|svg|webp|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+</IfModule>
+
+# --- This vhost only serves static files; disable PHP handler here ---
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
