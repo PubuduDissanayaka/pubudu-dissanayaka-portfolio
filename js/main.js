@@ -34,9 +34,13 @@
     var host = document.getElementById("cert-grid");
     if (!host) return;
     var html = PD_CERTS.map(function (c) {
+      var logo = (typeof PD_LOGOS !== "undefined" && PD_LOGOS[c.vendor]) || null;
+      var badge = logo
+        ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="' + logo + '"/></svg>'
+        : c.short;
       return (
         '<article class="cert reveal st-1">' +
-          '<span class="badge">' + c.short + '</span>' +
+          '<span class="badge" data-vendor="' + c.vendor + '">' + badge + '</span>' +
           '<span><span class="name">' + c.name + '</span><br /><span class="org">' + c.org + '</span></span>' +
         '</article>'
       );
