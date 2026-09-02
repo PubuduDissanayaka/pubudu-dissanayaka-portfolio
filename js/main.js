@@ -34,13 +34,9 @@
     var host = document.getElementById("cert-grid");
     if (!host) return;
     var html = PD_CERTS.map(function (c) {
-      var logo = (typeof PD_LOGOS !== "undefined" && PD_LOGOS[c.vendor]) || null;
-      var badge = logo
-        ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="' + logo + '"/></svg>'
-        : c.short;
       return (
         '<article class="cert reveal st-1">' +
-          '<span class="badge" data-vendor="' + c.vendor + '">' + badge + '</span>' +
+          '<span class="badge">' + c.short + '</span>' +
           '<span><span class="name">' + c.name + '</span><br /><span class="org">' + c.org + '</span></span>' +
         '</article>'
       );
@@ -218,6 +214,13 @@
       sections.forEach(function (s) {
         s.link && s.link.classList.toggle("active", s === current);
       });
+      // Deep-link: keep the URL hash in sync with the visible section
+      // (replaceState so it never triggers a jump / adds history noise).
+      var target = current && current.el.id;
+      if (target) {
+        var h = location.hash ? location.hash.slice(1) : "";
+        if (target !== h) history.replaceState(null, "", "#" + target);
+      }
     };
     window.addEventListener("scroll", setActive, { passive: true });
     setActive();
@@ -306,6 +309,30 @@
     }, 820);
   }
 
+  /* ---------------- Custom cursor (dot + trailing ring) ---------------- */
+  function initCursor() {
+    if (reduceMotion) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    var dot = document.getElementById("cursor-dot");
+    var ring = document.getElementById("cursor-ring");
+    if (!dot || !ring) return;
+    var html = document.documentElement;
+    html.classList.add("cursor-on");
+    var mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    var rx = mx, ry = my;
+    document.addEventListener("mousemove", function (e) { mx = e.clientX; my = e.clientY; });
+    document.addEventListener("mouseover", function (e) {
+      var t = e.target.closest("a, button, input, textarea, select, .filter-btn, .skill-tag, .cert, .project, .to-top, .wa-float");
+      html.classList.toggle("cursor-hover", !!t);
+    });
+    (function loop() {
+      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+      dot.style.transform = "translate3d(" + mx + "px," + my + "px,0) translate(-50%,-50%)";
+      ring.style.transform = "translate3d(" + rx + "px," + ry + "px,0) translate(-50%,-50%)";
+      requestAnimationFrame(loop);
+    })();
+  }
+
   /* ---------------- Background motif fade in ---------------- */
   function initBg() {
     var bg = document.querySelector(".grid-bg");
@@ -356,6 +383,7 @@
     initTheme();
     initNav();
     initToTop();
+    initCursor();
     initProgress();
     initLiveClock();
     initBg();

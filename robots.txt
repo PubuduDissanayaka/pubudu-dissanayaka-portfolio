@@ -1,0 +1,7 @@
+# robots.txt — Pubudu Dissanayaka portfolio
+# Allow all bot access; sitemap at the end.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://pubudu.devtenent.com/sitemap.xml
